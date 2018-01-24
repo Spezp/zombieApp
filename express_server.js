@@ -43,6 +43,10 @@ app.post("/urls", (req, res) => {
   res.send("Ok");         // Respond with 'Ok' (we will replace this)
 });
 
+app.post("/urls/:id/delete", (req, res) => {
+  delete urlDatabase[req.params.id];
+  res.redirect("/urls");
+});
 
 app.get("/urls/:id", (req, res) => {
   let templateVars = { shortURL: req.params.id, fullURL: urlDatabase[req.params.id] };

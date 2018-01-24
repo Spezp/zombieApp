@@ -1,4 +1,4 @@
-var express = require("express");
+var express = require("express")
 var app = express();
 var PORT = process.env.PORT || 8080; // default port 8080
 const bodyParser = require("body-parser");
@@ -38,9 +38,10 @@ app.get("/urls/new", (req, res) => {
 
 app.post("/urls", (req, res) => {
   console.log(req.body);  // debug statement to see POST parameters
-  urlDatabase[generateRandomString()] = req.body.longURL;
+  let newRandString = generateRandomString();
+  urlDatabase[newRandString] = req.body.longURL;
   console.log(urlDatabase);
-  res.send("Ok");         // Respond with 'Ok' (we will replace this)
+  res.redirect(`/urls/${newRandString}`);         // Respond with 'Ok' (we will replace this)
 });
 
 app.post("/urls/:id/delete", (req, res) => {
@@ -49,8 +50,7 @@ app.post("/urls/:id/delete", (req, res) => {
 });
 
 app.get("/urls/:id", (req, res) => {
-  let templateVars = { shortURL: req.params.id, fullURL: urlDatabase[req.params.id] };
-  res.render("urls_show", templateVars);
+  let templateVars = { shortURL: req.params.id, fullURL: urlDatabase[req.params.id] };  res.render("urls_show", templateVars);
 });
 
 app.get("/u/:shortURL", (req, res) => {

@@ -1,13 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>TinyApp - URLS</title>
+  <title>TinyApp - New URL</title>
 </head>
-<body>
+<body style="font-size:20px; padding:50px;"">
   <% include partials/_header %>
   <h1>New - URL!</h1>
   <ul>
       <li><%= fullURL %> - <%= shortURL %></li>
+      <li><a href="new">Another one!</a></li>
+      <li><a href="/urls">Urls List</a></li>
   </ul>
+  <div class="container">
+    <h1>Update <%= shortURL %></h1>
+    <form action="/urls" method="POST" style="margin:150px;">
+      <label for="longURL">Enter a URL:</label>
+      <input id="longURL" type="text" name="longURL" placeholder="http://<%= longURL %>" style="width: 300px">
+      <input type="submit" value="Update">
+    </form>
+  </div>
 </body>
 </html>

@@ -1,0 +1,27 @@
+<!-- views/urls_register.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>TinyApp - Register</title>
+</head>
+<body style="font-size:20px; padding:50px;">
+
+  <% include partials/_header %>
+  <h1>Register your account</h1>
+  <ul>
+    <form action="/urls/register" method="POST" style="margin-top: 100px;">
+      <label for="email">Email:</label>
+      <input id="email" type="email" name="email" placeholder="youremail@tinyApp.com" style="width: 300px"><br></br>
+      <input id="password" type="password" name="password" placeholder="********" style="width: 300px"><br></br>
+      <input type="submit" value="Submit">
+    </form>
+  </ul>
+  <div class="container">
+
+    <a href="/urls/new" style="text-decoration: none; color: black;">Make new TinyApp</a>
+
+  </div>
+
+</body>
+</html>

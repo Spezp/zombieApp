@@ -15,6 +15,19 @@ let urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+const users = {
+  "userRandomID": {
+    id: "userRandomID",
+    email: "user@example.com",
+    password: "purple-monkey-dinosaur"
+  },
+ "user2RandomID": {
+    id: "user2RandomID",
+    email: "user2@example.com",
+    password: "dishwasher-funk"
+  }
+};
+
 
 // Generate Random String and returns a six digit alphanumeric string.
 
@@ -76,10 +89,19 @@ app.post("/urls/logout", (req, res) => {
   res.redirect("/urls");
 });
 
-// Handles Registration
-app.post("/urls/logout", (req, res) => {
-
+// Handles Registration forms
+app.post("/urls/register", (req, res) => {
+  let newID = generateRandomString();
+  console.log(`ID: ${newID} email: ${req.body.email} password: ${req.body.password}`);
+  users[newID] = {
+    id: newID,
+    'email': req.body.email,
+    'password': req.body.password
+  };
+  console.log(users);
 });
+
+
 app.get("/urls/:id", (req, res) => {
   let templateVars = {
     shortURL: req.params.id,

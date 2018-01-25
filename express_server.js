@@ -1,5 +1,6 @@
 var express = require("express")
 var app = express();
+var cookieParser = require("cookie-parser");
 var PORT = process.env.PORT || 8080; // default port 8080
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));

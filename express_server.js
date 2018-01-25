@@ -1,26 +1,29 @@
-var express = require("express")
-var app = express();
-var cookieParser = require("cookie-parser");
-var PORT = process.env.PORT || 8080; // default port 8080
+const express = require("express");
+const app = express();
+const cookieParser = require("cookie-parser");
+const PORT = process.env.PORT || 8080; // default port 8080
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
 
+app.use(cookieParser());
 
 app.set("view engine", "ejs");
 
-var urlDatabase = {
+let urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 };
+// Generate Random String and returns a six digit alphanumeric string.
 
 function generateRandomString() {
-  let chars = '1234567890abcdefghijklmnopqrstuvwxyz';
-  var result = '';
-  for (var i = 6; i > 0; --i) {
+  const chars = '1234567890abcdefghijklmnopqrstuvwxyz';
+  let result = '';
+  for (let i = 6; i > 0; --i) {
     result += chars[Math.floor(Math.random() * chars.length)];
   }
   return result;
 }
+
 console.log(generateRandomString());
 
 app.get("/", (req, res) => {
@@ -29,7 +32,8 @@ app.get("/", (req, res) => {
 
 app.get("/urls", (req, res) => {
 
-  let templateVars = { urls: urlDatabase };
+  let templateVars = { urls: urlDatabase, username: req.cookies.username };
+  console.log(req.cookies.username);
   res.render("urls_index", templateVars);
 });
 
@@ -55,8 +59,21 @@ app.post("/urls/:id/update", (req, res) => {
   res.redirect("/urls");
 });
 
+app.post("/urls/login", (req, res) => {
+  res.cookie("username", req.body.username);
+  res.redirect("/urls");
+});
+
+app.post("/urls/logout", (req, res) => {
+  res.clearCookie("username");
+  res.redirect("/urls");
+});
+
 app.get("/urls/:id", (req, res) => {
-  let templateVars = { shortURL: req.params.id, longURL: urlDatabase[req.params.id] };
+  let templateVars = {
+    shortURL: req.params.id,
+    longURL: urlDatabase[req.params.id]
+  };
   console.log(templateVars.longURL);
   res.render("urls_show", templateVars);
 });
@@ -70,11 +87,7 @@ app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
 
-app.get("/hello", (req, res) => {
-  res.end("<html><body>Hello <b>World</b></body></html>\n");
-});
-
 
 app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}!`);
+  console.log(`TinyApp listening on port ${PORT}!`);
 });

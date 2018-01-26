@@ -78,7 +78,11 @@ app.get("/urls", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
-  res.render("urls_new", {templateVars, users});
+  if(res.cookie.userID){
+    res.render("urls_new", {templateVars, users});
+  } else {
+    res.render("urls_login", {templateVars, users});
+  }
 });
 
 app.get("/urls/register", (req, res) => {

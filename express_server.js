@@ -78,7 +78,7 @@ app.get("/urls", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
-  if(res.cookie.userID){
+  if(req.cookies.userID){
     res.render("urls_new", {templateVars, users});
   } else {
     res.render("urls_login", {templateVars, users});

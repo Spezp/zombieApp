@@ -21,7 +21,7 @@ const users = {
     email: "user@example.com",
     password: "purple-monkey-dinosaur"
   },
- "user2RandomID": {
+  "user2RandomID": {
     id: "user2RandomID",
     email: "user2@example.com",
     password: "dishwasher-funk"
@@ -40,11 +40,8 @@ function generateRandomString() {
   return result;
 }
 
-console.log(generateRandomString());
-
 app.get("/urls", (req, res) => {
   let templateVars = { urls: urlDatabase, username: req.cookies.username };
-  console.log(req.cookies.username);
   res.render("urls_index", templateVars);
 });
 
@@ -92,17 +89,35 @@ app.post("/urls/logout", (req, res) => {
 // Handles Registration forms
 app.post("/urls/register", (req, res) => {
   let newID = generateRandomString();
-  console.log(`ID: ${newID} email: ${req.body.email} password: ${req.body.password}`);
-  users[newID] = {
-    id: newID,
-    'email': req.body.email,
-    'password': req.body.password
-  };
-  res.cookie("userID", newID);
-  res.redirect("/urls");
-  console.log(users);
-});
+  let duplicateID = false;
+  for (id in users){
+    for (userInfo in users[id]){
+      if(userInfo === "email" && users[id][userInfo] === req.body.email) {
+        duplicateID = true;
+        console.log('User entered email already in use!');
+      }
+    }
+  }
 
+  if(req.body.email && req.body.password && duplicateID === false) {
+    users[newID] = {
+      id: newID,
+      'email': req.body.email,
+      'password': req.body.password
+    };
+
+    res.cookie("userID", newID);
+    res.redirect("/urls");
+
+  } else if(duplicateID) {
+    res.status(400);
+    res.send('Email already in use!');
+
+  } else {
+    res.status(400);
+    res.send('None shall pass. Enter a valid email/password.');
+  }
+});
 
 app.get("/urls/:id", (req, res) => {
   let templateVars = {
@@ -111,7 +126,6 @@ app.get("/urls/:id", (req, res) => {
     urls: urlDatabase,
     username: req.cookies.username
   };
-  console.log(templateVars.longURL);
   res.render("urls_show", templateVars);
 });
 

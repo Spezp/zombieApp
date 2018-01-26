@@ -28,6 +28,13 @@ const users = {
   }
 };
 
+const templateVars = {
+  urls: urlDatabase,
+  user: {
+    userID: undefined,
+    email: undefined
+  }
+};
 
 // Generate Random String and returns a six digit alphanumeric string.
 
@@ -41,17 +48,14 @@ function generateRandomString() {
 }
 
 app.get("/urls", (req, res) => {
-  let templateVars = { urls: urlDatabase, username: req.cookies.username };
   res.render("urls_index", {templateVars, users});
 });
 
 app.get("/urls/new", (req, res) => {
-  let templateVars = { urls: urlDatabase, username: req.cookies.username };
   res.render("urls_new", {templateVars, users});
 });
 
 app.get("/urls/register", (req, res) => {
-  let templateVars = { urls: urlDatabase, username: req.cookies.username };
   res.render("urls_register", {templateVars, users});
 });
 
@@ -76,13 +80,12 @@ app.post("/urls/:id/update", (req, res) => {
 
 // Logs in user
 app.post("/urls/login", (req, res) => {
-  res.cookie("username", req.body.username);
   res.redirect("/urls");
 });
 
 // Clears user login cookie
 app.post("/urls/logout", (req, res) => {
-  res.clearCookie("username");
+  res.clearCookie("userID");
   res.redirect("/urls");
 });
 
@@ -106,8 +109,13 @@ app.post("/urls/register", (req, res) => {
       'email': req.body.email,
       'password': req.body.password
     };
-
+    console.log('here');
     res.cookie("userID", newID);
+    console.log(req.cookies);
+    templateVars.user = {
+      userID: req.cookies["userID"]
+    };
+    console.log(templateVars.user);
     res.redirect("/urls");
 
   } else if(duplicateID) {
@@ -122,20 +130,15 @@ app.post("/urls/register", (req, res) => {
 
 // Redirect after generating new TinyApp
 app.get("/urls/:id", (req, res) => {
-  let templateVars = {
-    shortURL: req.params.id,
-    longURL: urlDatabase[req.params.id],
-    urls: urlDatabase,
-    username: req.cookies.username
-  };
+  templateVars.shortURL = req.params.id;
+  templateVars.longURL = urlDatabase[req.params.id];
   res.render("urls_show", {templateVars, users});
 });
 
 // Redirects TinyApp to actual domain (longURL)
 app.get("/u/:shortURL", (req, res) => {
-  let longURL = urlDatabase[req.params.shortURL];
-  console.log(longURL);
-  res.redirect(longURL);
+  console.log(templateVars.longURL);
+  res.redirect(templateVars.longURL);
 });
 
 app.get("/urls.json", (req, res) => {

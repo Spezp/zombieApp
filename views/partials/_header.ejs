@@ -2,14 +2,14 @@
 <div style="display: inline-block;">
 <h1 style=" display: inline-block;">TinyApp</h1>
 
-  <% if(templateVars.username === undefined) {%>
+  <% if(templateVars.user.userID === undefined) {%>
   <form action="/urls/login" method="POST" style="display: inline-block;">
         <label for="username">Login</label>
         <input id="username" type="text" name="username" placeholder="Username" style="width: 80px">
         <input type="submit" value="Submit">
   </form>
   <%} else {%>
-  <p style=" display: inline-black;"><%= templateVars.username %></p>
+  <p style=" display: inline-black;"><%= templateVars.user.userID %></p>
   <form action="/urls/logout" method="POST">
     <button  style="display: inline-block;" type="submit">Logout</button>
   </form>

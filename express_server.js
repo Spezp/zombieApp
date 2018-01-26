@@ -112,8 +112,6 @@ app.post("/urls/login", (req, res) => {
   let isUser = checkForMatch(users, req.body.email);
   const userEmailIDMatch = findId(users, req.body.email);
   let passMatch = false;
-  console.log(userEmailIDMatch);
-  console.log(users[userEmailIDMatch]);
   if(users[userEmailIDMatch] && users[userEmailIDMatch].password === req.body.password) {
     passMatch = true;
   } else {

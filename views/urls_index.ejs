@@ -10,14 +10,14 @@
   <% include partials/_header %>
   <h1>List of URLS</h1>
   <ul>
-    <% for(var url in urls) { %>
+    <% for(var url in templateVars.urls) { %>
 
         <form method="POST" action="/urls/<%= url %>/delete">
-          <li><%= url %> - <%= urls[url] %>
+          <li><%= url %> - <%= templateVars.urls[url] %>
           <input type="submit" value="Delete">
         </form>
 
-        <a href="urls/<%= url %>">   edit   </a>
+        <a href="/urls/<%= url %>">   edit   </a>
 
       </li>
     <% }; %>

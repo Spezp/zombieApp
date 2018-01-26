@@ -42,17 +42,17 @@ function generateRandomString() {
 
 app.get("/urls", (req, res) => {
   let templateVars = { urls: urlDatabase, username: req.cookies.username };
-  res.render("urls_index", templateVars);
+  res.render("urls_index", {templateVars, users});
 });
 
 app.get("/urls/new", (req, res) => {
   let templateVars = { urls: urlDatabase, username: req.cookies.username };
-  res.render("urls_new", templateVars);
+  res.render("urls_new", {templateVars, users});
 });
 
 app.get("/urls/register", (req, res) => {
   let templateVars = { urls: urlDatabase, username: req.cookies.username };
-  res.render("urls_register", templateVars);
+  res.render("urls_register", {templateVars, users});
 });
 
 
@@ -99,6 +99,7 @@ app.post("/urls/register", (req, res) => {
     }
   }
 
+  // Avoids duplicate registrations && empty forms
   if(req.body.email && req.body.password && duplicateID === false) {
     users[newID] = {
       id: newID,
@@ -119,6 +120,7 @@ app.post("/urls/register", (req, res) => {
   }
 });
 
+// Redirect after generating new TinyApp
 app.get("/urls/:id", (req, res) => {
   let templateVars = {
     shortURL: req.params.id,
@@ -126,12 +128,13 @@ app.get("/urls/:id", (req, res) => {
     urls: urlDatabase,
     username: req.cookies.username
   };
-  res.render("urls_show", templateVars);
+  res.render("urls_show", {templateVars, users});
 });
 
-
+// Redirects TinyApp to actual domain (longURL)
 app.get("/u/:shortURL", (req, res) => {
   let longURL = urlDatabase[req.params.shortURL];
+  console.log(longURL);
   res.redirect(longURL);
 });
 

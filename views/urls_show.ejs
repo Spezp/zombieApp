@@ -7,17 +7,17 @@
   <% include partials/_header %>
   <h1>New - URL!</h1>
   <ul style="list-style: none;">
-      <li>Your Original URL - <%= longURL %> - Your TinyApp http://localhost:8080/urls/<%= shortURL %></li>
+      <li>Your Original URL - <%= templateVars.longURL %> - Your TinyApp <a href="http://localhost:8080/u/<%= templateVars.shortURL %>">http://localhost:8080/u/<%= templateVars.shortURL %></a></li>
   </ul>
   <div class="container">
     <ul style="list-style: none;">
       <li><a href="new">Another one!</a>  <a href="/urls">Short URLS</a></li>
     </ul>
   <div class="container">
-    <h1>Update <%= shortURL %></h1>
-    <form action="/urls/<%= shortURL %>/update" method="POST">
+    <h1>Update <%= templateVars.shortURL %></h1>
+    <form action="/urls/<%= templateVars.shortURL %>/update" method="POST">
       <label for="longURL">Enter a URL:</label>
-      <input id="longURL" type="text" name="longURL" placeholder="<%= longURL %>" style="width: 300px">
+      <input id="longURL" type="text" name="longURL" placeholder="<%= templateVars.longURL %>" style="width: 300px">
       <input type="submit" value="Update">
     </form>
   </div>

@@ -1,15 +1,11 @@
 <!-- views/partials/_header.ejs -->
 <div style="display: inline-block;">
 <h1 style=" display: inline-block;">TinyApp</h1>
-
+<a href="/urls/login">Login</a><a href="/urls/register">Sign Up</a>
   <% if(templateVars.user.userID === undefined) {%>
-  <form action="/urls/login" method="POST" style="display: inline-block;">
-        <label for="username">Login</label>
-        <input id="username" type="text" name="username" placeholder="Username" style="width: 80px">
-        <input type="submit" value="Submit">
-  </form>
+
   <%} else {%>
-  <p style=" display: inline-black;"><%= templateVars.user.userID %></p>
+  <p style=" display: inline-black;"><%= templateVars.user.email %></p>
   <form action="/urls/logout" method="POST">
     <button  style="display: inline-block;" type="submit">Logout</button>
   </form>

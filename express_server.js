@@ -47,6 +47,32 @@ function generateRandomString() {
   return result;
 }
 
+// Check for match
+function checkForMatch(database, input) {
+  for (id in database){
+    for (userInfo in database[id]){
+      if(database[id][userInfo] === input) {
+        console.log("checkForMatch: MATCH FOUND!!");
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+// recieves email from login and returns matching userID string
+function findId(database, email) {
+  for (id in database){
+    for (userInfo in database[id]){
+      if(database[id][userInfo] === email) {
+        console.log(`Matched email: <${email}>, with Id:<${database[id].id}>`);
+        return database[id].id;
+      }
+    }
+  }
+  return '!missing userID!';
+}
+
 app.get("/urls", (req, res) => {
   res.render("urls_index", {templateVars, users});
 });
@@ -59,6 +85,9 @@ app.get("/urls/register", (req, res) => {
   res.render("urls_register", {templateVars, users});
 });
 
+app.get("/urls/login", (req, res) => {
+  res.render("urls_login", {templateVars, users});
+});
 
 app.post("/urls", (req, res) => {
   // debug statement to see POST parameters
@@ -80,40 +109,55 @@ app.post("/urls/:id/update", (req, res) => {
 
 // Logs in user
 app.post("/urls/login", (req, res) => {
-  res.redirect("/urls");
+  let isUser = checkForMatch(users, req.body.email);
+  const userEmailIDMatch = findId(users, req.body.email);
+  let passMatch = false;
+  console.log(userEmailIDMatch);
+  console.log(users[userEmailIDMatch]);
+  if(users[userEmailIDMatch] && users[userEmailIDMatch].password === req.body.password) {
+    passMatch = true;
+  } else {
+    console.log('No user to match to password');
+  }
+  console.log(passMatch);
+  if (isUser && passMatch) {
+    res.cookie("userID", req.body.userID);
+    templateVars.user = {
+      userID: userEmailIDMatch,
+      email: req.body.email
+    };
+    res.redirect("/urls");
+  } else {
+    res.status(403);
+    res.send('Wrong userID or password!');
+  }
 });
 
 // Clears user login cookie
 app.post("/urls/logout", (req, res) => {
   res.clearCookie("userID");
+  templateVars.user.userID = undefined;
   res.redirect("/urls");
 });
 
 // Handles Registration forms
 app.post("/urls/register", (req, res) => {
   let newID = generateRandomString();
-  let duplicateID = false;
-  for (id in users){
-    for (userInfo in users[id]){
-      if(userInfo === "email" && users[id][userInfo] === req.body.email) {
-        duplicateID = true;
-        console.log('User entered email already in use!');
-      }
-    }
-  }
+  let duplicateID = checkForMatch(users, req.body.email);
 
   // Avoids duplicate registrations && empty forms
   if(req.body.email && req.body.password && duplicateID === false) {
+    console.log('writing vars');
     users[newID] = {
       id: newID,
       'email': req.body.email,
       'password': req.body.password
     };
-    console.log('here');
     res.cookie("userID", newID);
-    console.log(req.cookies);
+    console.log('register post write vars to template', req.body.email);
     templateVars.user = {
-      userID: req.cookies["userID"]
+      userID: newID,
+      email: req.body.email
     };
     console.log(templateVars.user);
     res.redirect("/urls");
@@ -137,7 +181,6 @@ app.get("/urls/:id", (req, res) => {
 
 // Redirects TinyApp to actual domain (longURL)
 app.get("/u/:shortURL", (req, res) => {
-  console.log(templateVars.longURL);
   res.redirect(templateVars.longURL);
 });
 

@@ -1,0 +1,19 @@
+<!-- urls_login.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>TinyApp - Login</title>
+</head>
+<body style="font-size:20px; padding:50px;">
+
+  <% include partials/_header %>
+  <h1>Login</h1>
+  <form action="/urls/login" method="POST" style="display: inline-block;">
+      <label for="email">Login</label>
+      <input id="email" type="text" name="email" placeholder="email" style="width: 80px"><br></br>
+      <input id="password" type="password" name="password" placeholder="********" style="width: 300px"><br></br>
+      <input type="submit" value="Submit">
+  </form>
+
+</body>
+</html>

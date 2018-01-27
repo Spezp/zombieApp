@@ -3,6 +3,8 @@ const app = express();
 const cookieParser = require("cookie-parser");
 const PORT = process.env.PORT || 8080;
 const bodyParser = require("body-parser");
+var bcrypt = require('bcrypt');
+
 
 app.use(bodyParser.urlencoded({extended: true}));
 
@@ -137,7 +139,8 @@ app.post("/urls/:id/update", (req, res) => {
 app.post("/urls/login", (req, res) => {
   let isUser = checkForMatch(users, req.body.email);
   const userEmailIDMatch = findId(users, req.body.email);
-  let passMatch = false;
+  console.log(users[userEmailIDMatch].password);
+  let passMatch = bcrypt.hashSync(req.body.password, users[userEmailIDMatch].password);
   if(users[userEmailIDMatch] && users[userEmailIDMatch].password === req.body.password) {
     passMatch = true;
   } else {
@@ -175,7 +178,7 @@ app.post("/urls/register", (req, res) => {
     users[newID] = {
       id: newID,
       'email': req.body.email,
-      'password': req.body.password
+      'password': bcrypt.hashSync(req.body.password, 10)
     };
     res.cookie("userID", newID);
     console.log('register post write vars to template', req.body.email);

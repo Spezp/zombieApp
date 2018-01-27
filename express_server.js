@@ -110,14 +110,27 @@ app.post("/urls", (req, res) => {
 });
 
 app.post("/urls/:id/delete", (req, res) => {
-  delete urlDatabase[req.params.id];
-  res.redirect("/urls");
+  let authUser = findIdFromParam(req.body.id);
+  if(authUser === req.cookies.userID){
+    delete urlDatabase[req.params.id];
+    res.redirect("/urls");
+  } else{
+    res.status(400);
+    res.send('No Authorization.');
+  }
 });
 
 // For updateding the URL provided by user while keeping the same TinyApp
 app.post("/urls/:id/update", (req, res) => {
-  urlDatabase[req.params.id][0] = req.body.longURL;
-  res.redirect("/urls");
+  let authUser = findIdFromParam(req.body.id);
+  if(authUser === req.cookies.userID){
+    urlDatabase[req.params.id][0] = req.body.longURL;
+    res.redirect("/urls");
+  } else{
+    res.status(400);
+    res.send('No Authorization.');
+  }
+
 });
 
 // Logs in user

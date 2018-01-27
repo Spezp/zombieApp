@@ -11,16 +11,16 @@
   <h1>List of URLS</h1>
   <ul>
     <% for(var url in templateVars.urls) { %>
-
+        <% if(templateVars.urls[url][1] === templateVars.user.userID) {%>
         <form method="POST" action="/urls/<%= url %>/delete">
-          <li><%= url %> - <%= templateVars.urls[url] %>
+          <li><%= url %> - <%= templateVars.urls[url[0]] %>
           <input type="submit" value="Delete">
         </form>
 
         <a href="/urls/<%= url %>">   edit   </a>
 
       </li>
-    <% }; %>
+    <% }}; %>
   </ul>
   <div class="container">
 

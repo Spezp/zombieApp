@@ -2,10 +2,11 @@
 
 <!DOCTYPE html>
 <html lang="en">
+<link href="style.css" type="text/css" rel="stylesheet">
 <head>
   <title>TinyApp - Home</title>
 </head>
-<body style="font-size:20px; padding:50px;">
+<body>
 
   <% include partials/_header %>
   <h1>List of URLS</h1>
@@ -13,7 +14,7 @@
     <% for(var url in templateVars.urls) { %>
         <% if(templateVars.urls[url][1] === templateVars.user.userID) {%>
         <form method="POST" action="/urls/<%= url %>/delete">
-          <li><%= url %> - <%= templateVars.urls[url[0]] %>
+          <li><%= url %> - <%= templateVars.urls[url][0] %>
           <input type="submit" value="Delete">
         </form>
 

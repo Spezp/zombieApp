@@ -1,9 +1,10 @@
 const express = require("express");
 const app = express();
 const cookieParser = require("cookie-parser");
+const cookieSession = require('cookie-session');
 const PORT = process.env.PORT || 8080;
 const bodyParser = require("body-parser");
-var bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt');
 
 
 app.use(bodyParser.urlencoded({extended: true}));
@@ -11,6 +12,14 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
 
 app.set("view engine", "ejs");
+
+app.use(cookieSession({
+  name: 'session',
+  keys: ['key1', 'key2'],
+
+  // Cookie Options
+  maxAge: 24 * 60 * 60 * 1000
+}));
 
 let urlDatabase = {
   "b2xVn2": ["http://www.lighthouselabs.ca", "exampleUser"],
@@ -47,7 +56,7 @@ function findIdFromParam(tinyParam) {
     }
   }
   return undefined;
-};
+}
 function generateRandomString() {
   const chars = '1234567890abcdefghijklmnopqrstuvwxyz';
   let result = '';
@@ -75,7 +84,7 @@ function findId(database, email) {
   for (let id in database){
     for (userInfo in database[id]){
       if(database[id][userInfo] === email) {
-        console.log(`Matched email: <${email}>, with Id:<${database[id].id}>`);
+        //console.log(`Matched email: <${email}>, with Id:<${database[id].id}>`);
         return database[id].id;
       }
     }
@@ -84,12 +93,13 @@ function findId(database, email) {
 }
 
 app.get("/urls", (req, res) => {
-  console.log(templateVars);
+  console.log(templateVars.user);
+  console.log(templateVars.urls);
   res.render("urls_index", {templateVars, users});
 });
 
 app.get("/urls/new", (req, res) => {
-  if(req.cookies.userID){
+  if(req.session.userID){
     res.render("urls_new", {templateVars, users});
   } else {
     res.render("urls_login", {templateVars, users});
@@ -108,12 +118,13 @@ app.post("/urls", (req, res) => {
   // debug statement to see POST parameters
   let newRandString = generateRandomString();
   urlDatabase[newRandString] = [req.body.longURL, templateVars.user.userID];
+  console.log('Tiny URL generated', newRandString, 'Original URL', req.body.longURL);
   res.redirect(`/urls/${newRandString}`);
 });
 
 app.post("/urls/:id/delete", (req, res) => {
-  let authUser = findIdFromParam(req.body.id);
-  if(authUser === req.cookies.userID){
+  let authUser = findIdFromParam(req.params.id);
+  if(authUser === req.session.userID){
     delete urlDatabase[req.params.id];
     res.redirect("/urls");
   } else{
@@ -124,8 +135,9 @@ app.post("/urls/:id/delete", (req, res) => {
 
 // For updateding the URL provided by user while keeping the same TinyApp
 app.post("/urls/:id/update", (req, res) => {
-  let authUser = findIdFromParam(req.body.id);
-  if(authUser === req.cookies.userID){
+  let authUser = findIdFromParam(req.params.id);
+  console.log(req.params.id, authUser, req.session.userID);
+  if(authUser === req.session.userID){
     urlDatabase[req.params.id][0] = req.body.longURL;
     res.redirect("/urls");
   } else{
@@ -137,23 +149,20 @@ app.post("/urls/:id/update", (req, res) => {
 
 // Logs in user
 app.post("/urls/login", (req, res) => {
-  let isUser = checkForMatch(users, req.body.email);
-  const userEmailIDMatch = findId(users, req.body.email);
-  console.log(users[userEmailIDMatch].password);
-  let passMatch = bcrypt.hashSync(req.body.password, users[userEmailIDMatch].password);
-  if(users[userEmailIDMatch] && users[userEmailIDMatch].password === req.body.password) {
-    passMatch = true;
-  } else {
-    console.log('No user to match to password');
-  }
-  console.log(passMatch);
-  if (isUser && passMatch) {
-    res.cookie("userID", userEmailIDMatch);
-    templateVars.user = {
-      userID: userEmailIDMatch,
-      email: req.body.email
-    };
-    res.redirect("/urls");
+  // Check for completed fields in form ---> if not `status403`
+  if(req.body.email && req.body.password){
+    const isUser = checkForMatch(users, req.body.email);
+    const userEmailIDMatch = findId(users, req.body.email);
+    let passMatch = bcrypt.compareSync(req.body.password, users[userEmailIDMatch].password);
+
+    if (isUser && passMatch) {
+      req.session.userID = userEmailIDMatch;
+      templateVars.user = {
+        userID: userEmailIDMatch,
+        email: req.body.email
+      };
+      res.redirect("/urls");
+    }
   } else {
     res.status(403);
     res.send('Wrong userID or password!');
@@ -162,7 +171,7 @@ app.post("/urls/login", (req, res) => {
 
 // Clears user login cookie
 app.post("/urls/logout", (req, res) => {
-  res.clearCookie("userID");
+  req.session = null;
   templateVars.user.userID = undefined;
   res.redirect("/urls");
 });
@@ -174,19 +183,16 @@ app.post("/urls/register", (req, res) => {
 
   // Avoids duplicate registrations && empty forms
   if(req.body.email && req.body.password && duplicateID === false) {
-    console.log('writing vars');
     users[newID] = {
       id: newID,
       'email': req.body.email,
       'password': bcrypt.hashSync(req.body.password, 10)
     };
-    res.cookie("userID", newID);
-    console.log('register post write vars to template', req.body.email);
+    req.session.userID = newID;
     templateVars.user = {
       userID: newID,
       email: req.body.email
     };
-    console.log(templateVars.user);
     res.redirect("/urls");
 
   } else if(duplicateID) {
@@ -201,10 +207,10 @@ app.post("/urls/register", (req, res) => {
 
 // Redirect after generating new TinyApp
 app.get("/urls/:id", (req, res) => {
-  const authUser = findIdFromParam(req.params.id);
-  console.log(authUser, req.cookies.userID);
-  console.log(req.params.id, templateVars.user.userID);
-  if(authUser === req.cookies.userID){
+  let authUser = findIdFromParam(req.params.id);
+  templateVars.shortURL = req.params.id;
+  console.log(templateVars.urls);
+  if(authUser === req.session.userID){
     res.render("urls_show", {templateVars, users});
   } else {
     res.status(400);

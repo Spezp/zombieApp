@@ -3,29 +3,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <link href="style.css" type="text/css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 <head>
   <title>TinyApp - Home</title>
 </head>
 <body>
+    <% include partials/_header %>
 
-  <% include partials/_header %>
-  <h1>List of URLS</h1>
-  <ul>
-    <% for(var url in templateVars.urls) { %>
-        <% if(templateVars.urls[url][1] === templateVars.user.userID) {%>
-        <form method="POST" action="/urls/<%= url %>/delete">
-          <li><%= url %> - <%= templateVars.urls[url][0] %>
-          <input type="submit" value="Delete">
-        </form>
-
-        <a href="/urls/<%= url %>">   edit   </a>
-
-      </li>
-    <% }}; %>
-  </ul>
   <div class="container">
+    <h1>Zombie</h1><img src="public/skull.png"><h1>App</h1>
+    <ul>
+      <% for(var url in templateVars.urls) { %>
+        <% if(templateVars.urls[url][1] === templateVars.user.userID) {%>
+        <li>
+          <%= url %> - <%= templateVars.urls[url][0] %>
+        </li>
+        <li>
+          <form method="POST" action="/urls/<%= url %>/delete">
+          <input type="submit" value="Delete">
+          </form>
+        </li>
+        <li>
+        <a href="/urls/<%= url %>">   edit   </a>
+        </li>
+      <% }}; %>
+      <li>
+        <a href="/urls/new">Make new TinyApp</a>
+      </li>
+    </ul>
 
-    <a href="/urls/new" style="text-decoration: none; color: black;">Make new TinyApp</a>
 
   </div>
 

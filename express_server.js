@@ -11,7 +11,9 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.use(cookieParser());
 
+
 app.set("view engine", "ejs");
+app.use('/urls', express.static('public'));
 
 app.use(cookieSession({
   name: 'session',

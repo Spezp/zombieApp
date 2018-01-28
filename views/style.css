@@ -23,7 +23,8 @@ article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
   display: block; }
 
-body {
+body, div {
+  background-color: #999;
   line-height: 1; }
 
 ol, ul {
@@ -41,4 +42,9 @@ table {
   border-collapse: collapse;
   border-spacing: 0; }
 
+body {
+  background-color: #293948; }
+h1 {
+  font-size: 2;
+}
 /*# sourceMappingURL=style.css.map */

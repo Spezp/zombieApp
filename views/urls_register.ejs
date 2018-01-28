@@ -2,26 +2,24 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<link href="style.css" type="text/css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="style.css" >
+<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 <head>
   <title>TinyApp - Register</title>
 </head>
 <body>
-
   <% include partials/_header %>
-  <h1>Register your account</h1>
-  <ul>
-    <form action="/urls/register" method="POST">
-      <label for="email">Email:</label>
-      <input id="email" type="email" name="email" placeholder="youremail@tinyApp.com"><br></br>
-      <input id="password" type="password" name="password" placeholder="********"><br></br>
-      <input type="submit" value="Submit">
-    </form>
-  </ul>
   <div class="container">
-
-    <a href="/urls/new">Make new TinyApp</a>
-
+    <h1>Register your account</h1>
+    <ul>
+      <form action="/urls/register" method="POST">
+        <label for="email">Email:</label>
+        <input id="email" type="email" name="email" placeholder="youremail@tinyApp.com"><br></br>
+        <input id="password" type="password" name="password" placeholder="********"><br></br>
+        <input type="submit" value="Submit">
+      </form>
+      <a href="/urls/new">Make new TinyApp</a>
+    </ul>
   </div>
 
 </body>

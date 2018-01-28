@@ -2,19 +2,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <link href="style.css" type="text/css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 <head>
   <title>TinyApp - Login</title>
 </head>
 <body>
 
   <% include partials/_header %>
-  <h1>Login</h1>
-  <form action="/urls/login" method="POST">
-      <label for="email">Login</label>
-      <input id="email" type="text" name="email" placeholder="email"><br></br>
-      <input id="password" type="password" name="password" placeholder="********" ><br></br>
-      <input type="submit" value="Submit">
-  </form>
+
+  <div class="container">
+    <h1>Login</h1>
+    <form action="/urls/login" method="POST">
+        <label for="email">Login</label>
+        <input id="email" type="text" name="email" placeholder="email"><br></br>
+        <input id="password" type="password" name="password" placeholder="********" ><br></br>
+        <input type="submit" value="Submit">
+    </form>
+  </div>
 
 </body>
 </html>

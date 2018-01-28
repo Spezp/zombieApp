@@ -1,0 +1,123 @@
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline; }
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+  display: block; }
+
+
+
+ol, ul {
+  list-style: none; }
+
+blockquote, q {
+  quotes: none; }
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: "";
+  content: none; }
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0; }
+
+body {
+  background-color: #00AAFFFF; }
+/*# sourceMappingURL=style.css.map */
+body {
+  font-family: 'Roboto', sans-sarif;
+}
+
+.container {
+  width: 40%;
+  height: 300px;
+  margin: 200px auto;
+  background-color: #ffff;
+  line-height: 1;
+  border-radius: 25px;
+  text-align: center;
+}
+
+.header {
+  width: 80%;
+  margin: 10px auto;
+  text-align: right;
+}
+
+.header li{
+  display: inline-block;
+}
+
+
+.container ul {
+  width: 100%;
+}
+
+.container h1{
+  margin: 0px auto;
+  text-align: center;
+}
+
+.container p{
+  margin: 0px auto;
+  text-align: center;
+}
+
+.container a{
+  margin: 0px auto;
+  text-align: center;
+}
+
+.container a{
+  margin: 0 auto;
+  width: 100%;
+  }
+
+.button {
+    background-color: #fff;
+    border: solid 1px;
+    border-color: #00AAFFFF;
+    color: #00AAFFFF;
+    padding: 5px 20px;
+    margin: 5px 5px 5px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 10px;
+}
+
+.button:hover {
+  color: #fff;
+  background-color: #00AAffff;
+  border: solid 1px;
+  border-color: #FFF;
+}
+nline-block;
+}
+/*h1{
+  display: inline;
+  margin: auto;
+  padding-right: 120px;
+  text-align: right;
+
+}*/

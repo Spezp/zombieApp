@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <link href="style.css" type="text/css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
   <head></head>
   <body>
     <% include partials/_header %>
-    <form action="/urls" method="POST">
-      <label for="longURL">Enter a URL:</label>
-      <input id="longURL" type="text" name="longURL" placeholder="http://">
-      <input type="submit" value="Submit">
-    </form>
+    <div class="container">
+      <form action="/urls" method="POST">
+        <label for="longURL">Enter a URL:</label>
+        <input id="longURL" type="text" name="longURL" placeholder="http://">
+        <input type="submit" value="Submit">
+      </form>
+    </div>
   </body>
 </html>

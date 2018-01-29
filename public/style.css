@@ -47,10 +47,32 @@ body {
   font-family: 'Roboto', sans-sarif;
 }
 
+img {
+  width: 100px;
+}
+.title h1{
+  min-height: 100px;
+  vertical-align: middle;
+  text-align: center;
+  margin-bottom: 30px;
+  font-family: 'Libre Barcode 39', cursive;;
+  font-size: 40px;
+}
+
+.header p{
+  color: #fff;
+}
+.title {
+  height: 100px;
+  vertical-align: middle;
+  margin: 60px auto;
+  text-align: center;
+}
+
 .container {
   width: 40%;
   height: 300px;
-  margin: 200px auto;
+  margin: 20px auto;
   background-color: #ffff;
   line-height: 1;
   border-radius: 25px;
@@ -67,30 +89,21 @@ body {
   display: inline-block;
 }
 
-
-.container ul {
-  width: 100%;
+.content{
+  padding-top: 50px;
 }
 
-.container h1{
-  margin: 0px auto;
-  text-align: center;
+.content h2{
+  padding-bottom: 20px;
+}
+.contentlist li{
+  display: inline-block;
 }
 
-.container p{
-  margin: 0px auto;
-  text-align: center;
-}
 
-.container a{
-  margin: 0px auto;
-  text-align: center;
+h2 {
+  font-size:40px;
 }
-
-.container a{
-  margin: 0 auto;
-  width: 100%;
-  }
 
 .button {
     background-color: #fff;
@@ -98,7 +111,7 @@ body {
     border-color: #00AAFFFF;
     color: #00AAFFFF;
     padding: 5px 20px;
-    margin: 5px 5px 5px;
+    margin: 15px 5px 5px;
     text-align: center;
     text-decoration: none;
     display: inline-block;

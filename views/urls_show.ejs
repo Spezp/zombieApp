@@ -2,8 +2,9 @@
 <html lang="en">
 <link rel="stylesheet" href="style.css" type="text/css" >
 <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Libre+Barcode+39" rel="stylesheet">
 <head>
-  <title>TinyApp - New URL</title>
+  <title>ZombieApp</title>
 </head>
 
 <body>
@@ -11,19 +12,22 @@
   <% include partials/_header %>
 
   <div class="container">
-    <ul>
-       <li>The URL <%= templateVars.urls[templateVars.shortURL][0] %> has been assigned <a href="http://localhost:8080/u/<%= templateVars.shortURL %>">http://localhost:8080/u/<%= templateVars.shortURL %></a></li>
-    </ul>
+    <div class="content">
+      <h2>You Monster</h1>
+      <ul>
+         <li><a href="http://localhost:8080/u/<%= instanceVars.shortURL %>">http://localhost:8080/u/<%= instanceVars.shortURL %></a></li>
+      </ul>
 
-    <ul style="list-style: none;">
-      <li><a href="new">Another one!</a>  <a href="/urls">Short URLS</a></li>
-    </ul>
-    <h1>Update <%= templateVars.shortURL %></h1>
-    <form action="/urls/<%= templateVars.shortURL %>/update" method="POST">
-      <label for="longURL">Enter a URL:</label>
-      <input id="longURL" type="text" name="longURL" placeholder="<%= templateVars.longURL %>">
-      <input type="submit" value="Update">
-    </form>
+      <ul>
+        <li><a href="new">Another one!</a>  <a href="/urls">Short URLS</a></li>
+      </ul>
+      <h1>Update <%= instanceVars.shortURL %></h1>
+      <form action="/urls/<%= instanceVars.shortURL %>/update" method="POST">
+        <label for="longURL">Enter a URL:</label>
+        <input id="longURL" type="text" name="longURL" placeholder="http://">
+        <input type="submit" value="Update">
+      </form>
+    </div>
   </div>
 </body>
 </html>

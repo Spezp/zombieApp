@@ -49,10 +49,10 @@ const templateVars = {
   }
 };
 
-// Generate Random String and returns a six digit alphanumeric string.
+
 function findIdFromParam(tinyParam) {
   for (tinyAppKey in urlDatabase) {
-    if(tinyAppKey === tinyParam){
+    if (tinyAppKey === tinyParam) {
       console.log('findid from param', urlDatabase[tinyAppKey][1], tinyAppKey);
       return urlDatabase[tinyAppKey][1];
     }
@@ -68,11 +68,11 @@ function generateRandomString() {
   return result;
 }
 
-// Check for match
+// Check for email existence in user database
 function checkForMatch(database, input) {
   for (let id in database){
     for (userInfo in database[id]){
-      if(database[id][userInfo] === input) {
+      if (database[id][userInfo] === input) {
         console.log("checkForMatch: MATCH FOUND!!");
         return true;
       }
@@ -85,14 +85,19 @@ function checkForMatch(database, input) {
 function findId(database, email) {
   for (let id in database){
     for (userInfo in database[id]){
-      if(database[id][userInfo] === email) {
+      if (database[id][userInfo] === email) {
         //console.log(`Matched email: <${email}>, with Id:<${database[id].id}>`);
         return database[id].id;
       }
     }
   }
-  return '!missing userID!';
+  return false;
 }
+
+app.get("/u/:shortURL", (req, res) => {
+  console.log(req.params.shortURL);
+  res.redirect(urlDatabase[req.params.shortURL][0]);
+});
 
 app.get("/urls", (req, res) => {
   console.log(templateVars.user);
@@ -101,7 +106,7 @@ app.get("/urls", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
-  if(req.session.userID){
+  if (req.session.userID){
     res.render("urls_new", {templateVars, users});
   } else {
     res.render("urls_login", {templateVars, users});
@@ -120,16 +125,17 @@ app.post("/urls", (req, res) => {
   // debug statement to see POST parameters
   let newRandString = generateRandomString();
   urlDatabase[newRandString] = [req.body.longURL, templateVars.user.userID];
+  console.log(urlDatabase);
   console.log('Tiny URL generated', newRandString, 'Original URL', req.body.longURL);
   res.redirect(`/urls/${newRandString}`);
 });
 
 app.post("/urls/:id/delete", (req, res) => {
   let authUser = findIdFromParam(req.params.id);
-  if(authUser === req.session.userID){
+  if (authUser === req.session.userID) {
     delete urlDatabase[req.params.id];
     res.redirect("/urls");
-  } else{
+  } else {
     res.status(400);
     res.send('No Authorization.');
   }
@@ -139,7 +145,7 @@ app.post("/urls/:id/delete", (req, res) => {
 app.post("/urls/:id/update", (req, res) => {
   let authUser = findIdFromParam(req.params.id);
   console.log(req.params.id, authUser, req.session.userID);
-  if(authUser === req.session.userID){
+  if (authUser === req.session.userID) {
     urlDatabase[req.params.id][0] = req.body.longURL;
     res.redirect("/urls");
   } else{
@@ -152,23 +158,27 @@ app.post("/urls/:id/update", (req, res) => {
 // Logs in user
 app.post("/urls/login", (req, res) => {
   // Check for completed fields in form ---> if not `status403`
-  if(req.body.email && req.body.password){
+  if (req.body.email && req.body.password){
     const isUser = checkForMatch(users, req.body.email);
     const userEmailIDMatch = findId(users, req.body.email);
-    let passMatch = bcrypt.compareSync(req.body.password, users[userEmailIDMatch].password);
+    let passMatch = false;
+    console.log(userEmailIDMatch);
+    if (userEmailIDMatch){
+      passMatch = bcrypt.compareSync(req.body.password, users[userEmailIDMatch].password);
 
-    if (isUser && passMatch) {
-      req.session.userID = userEmailIDMatch;
-      templateVars.user = {
-        userID: userEmailIDMatch,
-        email: req.body.email
-      };
-      res.redirect("/urls");
+      if (isUser && passMatch) {
+        req.session.userID = userEmailIDMatch;
+        templateVars.user = {
+          userID: userEmailIDMatch,
+          email: req.body.email
+        };
+        res.redirect("/urls");
+      }
     }
-  } else {
-    res.status(403);
-    res.send('Wrong userID or password!');
+
   }
+  res.status(403);
+  res.send('Wrong userID or password!');
 });
 
 // Clears user login cookie
@@ -206,14 +216,16 @@ app.post("/urls/register", (req, res) => {
     res.send('None shall pass. Enter a valid email/password.');
   }
 });
-
 // Redirect after generating new TinyApp
 app.get("/urls/:id", (req, res) => {
+  console.log('hit this');
   let authUser = findIdFromParam(req.params.id);
-  templateVars.shortURL = req.params.id;
-  console.log(templateVars.urls);
-  if(authUser === req.session.userID){
-    res.render("urls_show", {templateVars, users});
+  let instanceVars = {
+    shortURL: req.params.id,
+    longURL: urlDatabase[req.params.id]
+  };
+  if (authUser === req.session.userID) {
+    res.render("urls_show", {templateVars, users, instanceVars});
   } else {
     res.status(400);
     res.send('unauthorized access');
@@ -221,14 +233,19 @@ app.get("/urls/:id", (req, res) => {
 });
 
 // Redirects TinyApp to actual domain (longURL)
-app.get("/u/:shortURL", (req, res) => {
-  res.redirect(urlDatabase.shortURL);
-});
+
 
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
 
+app.get("/", (req, res) => {
+  if (templateVars.user.userID) {
+    res.redirect("/urls");
+  } else {
+    res.redirect("/urls/login");
+  }
+});
 
 app.listen(PORT, () => {
   console.log(`TinyApp listening on port ${PORT}!`);

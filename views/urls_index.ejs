@@ -4,35 +4,33 @@
 <html lang="en">
 <link href="style.css" type="text/css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Libre+Barcode+39" rel="stylesheet">
 <head>
   <title>TinyApp - Home</title>
 </head>
 <body>
-    <% include partials/_header %>
-
+  <% include partials/_header %>
   <div class="container">
-    <h1>Zombie</h1><img src="public/skull.png"><h1>App</h1>
+  <div class="contentlist">
     <ul>
       <% for(var url in templateVars.urls) { %>
         <% if(templateVars.urls[url][1] === templateVars.user.userID) {%>
         <li>
-          <%= url %> - <%= templateVars.urls[url][0] %>
+          <a href="/u/<%= url %>"><%= url %></a> - <%= templateVars.urls[url][0] %>
         </li>
         <li>
           <form method="POST" action="/urls/<%= url %>/delete">
-          <input type="submit" value="Delete">
+          <input class="button" type="submit" value="Delete">
           </form>
         </li>
         <li>
-        <a href="/urls/<%= url %>">   edit   </a>
+        <a href="/urls/<%= url %>" class="button">   EDIT   </a>
         </li>
       <% }}; %>
-      <li>
-        <a href="/urls/new">Make new TinyApp</a>
-      </li>
     </ul>
+    <p><a href="/urls/new" class="button">Make new ZombieApp</a></p>
 
-
+  </div>
   </div>
 
 </body>
